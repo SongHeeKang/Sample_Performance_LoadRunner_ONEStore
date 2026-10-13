@@ -11,7 +11,7 @@
 
 ## 개요
 
-앱 마켓 서비스의 서버 API(SAC, CCS 등)를 대상으로 **LoadRunner**를 이용해 성능(부하) 테스트를 수행하고,
+앱 마켓 서비스의 서버 API를 대상으로 **LoadRunner**를 이용해 성능(부하) 테스트를 수행하고,
 APM / 서버 모니터링 도구와 함께 결과를 분석해 **목표 TPS 충족 여부와 병목 구간**을 확인한 프로젝트입니다.
 
 - VuGen으로 API 호출 시나리오(트랜잭션) 스크립트 작성 및 응답 검증 로직 추가
@@ -56,13 +56,13 @@ LoadRunner의 각 구성 요소가 맡는 역할은 다음과 같습니다.
 
 ### 1. 스크립트 작성 (VuGen)
 
-<img width="562" height="368" alt="VuGen Scripts" src="https://github.com/user-attachments/assets/e34b0931-a327-40f9-a9ae-7e42223034e9" />
+<img width="562" height="368" alt="VuGen Scripts" src="https://github.com/user-attachments/assets/5ad7786e-1a02-4394-bdaf-55fbd49d8f48" />
 
 API 하나를 하나의 **트랜잭션**(`lr_start_transaction` ~ `lr_end_transaction`)으로 묶어 응답 시간과 TPS를 API 단위로 측정했습니다.
 
 - `web_add_header`: 실제 단말과 동일한 User-Agent, Content-Type, 네트워크 정보 헤더 추가
 - `web_reg_find` / `web_reg_save_param`: 응답 Body에서 정상 응답 여부와 `errorCode`, `message`를 미리 등록해 추출
-- `web_custom_request`: 파라미터화한 서버 주소와 상품 ID로 API 호출
+- `web_custom_request`: 파라미터화한 서버 주소와 요청 값으로 API 호출
 - 정상 응답이 아니면 `LR_FAIL`로 트랜잭션을 실패 처리하고 에러 코드와 메시지를 로그로 남겨, **HTTP 200이지만 실제로는 실패한 응답**도 걸러냈습니다.
 
 ```c
@@ -73,12 +73,12 @@ Action()
     web_add_header("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
 
     // 응답 검증용 값 등록 (정상 응답 여부 / 에러 코드 / 에러 메시지)
-    web_reg_find("Search=Body", "SaveCount=cnt", "Text=<action base=\"http://xxx.example.com/action/error\"", LAST);
-    web_reg_save_param("errorCode", "LB=<action base=\"http://xxx.example.com/action/error\" identifier=\"", "RB=\">", LAST);
+    web_reg_find("Search=Body", "SaveCount=cnt", "Text=<action base=\"http://xxx.example.com/xxx\"", LAST);
+    web_reg_save_param("errorCode", "LB=<action base=\"http://xxx.example.com/xxx\" identifier=\"", "RB=\">", LAST);
     web_reg_save_param("message", "LB=<description>", "RB=</description>", "NotFound=WARNING", LAST);
 
     web_custom_request("web_custom_request",
-        "URL=http://{STG_IP}/xxx/product/detail/v1/{productId}",
+        "URL=http://xxx.example.com/xxx",
         "Method=GET",
         LAST);
 
@@ -129,13 +129,13 @@ Vuser가 늘어나는 구간(Ramp-up)에서 TPS가 함께 증가하다가, 목�
 
 ### 4. 성능 테스트 결과 Report
 
-<img width="1356" height="792" alt="성능 테스트 Report" src="https://github.com/user-attachments/assets/870e5dbd-462c-41cb-b540-d269eee60d7c" />
+<img width="1356" height="792" alt="성능 테스트 Report" src="https://github.com/user-attachments/assets/534a4b2d-ead1-49a4-bb6c-a6010f3503ac" />
 
 테스트 결과를 평가 의견, 검증 도구, 시스템 구성도, API별 결과 상세 내역과 함께 정리해 유관 부서에 공유했습니다.
 
 **요약 (왼쪽)**
 
-- **평가 의견**: SAC, CCS 회원정보 조회 API 1건씩 부하를 진행해, 목표 TPS **150 TPS / 30 TPS** 대비 평균 응답 속도 **0.3초**로 안정적으로 처리됨을 확인
+- **평가 의견**: 서버 2곳의 회원정보 조회 API를 1건씩 부하 진행해, 목표 TPS **150 TPS / 30 TPS** 대비 평균 응답 속도 **0.3초**로 안정적으로 처리됨을 확인
 - **검증 도구**: 부하발생기(LoadRunner), 모니터링(PinPoint / JENNIFER / Grafana)
 - **시스템 구성도**: 클라이언트 → VIP / DNS → Web(Apache) → WAS(Tomcat)로 이어지는 요청 흐름과 신규 / 레거시 서버 구성을 함께 정리해,
   부하가 어느 구간을 거치는지와 병목이 생길 수 있는 지점을 리포트에서 바로 확인할 수 있도록 했습니다.
