@@ -1,5 +1,6 @@
 .DS_Store
 /.idea/
 
-# 이미지는 GitHub user-attachments 링크로 README에서 참조 (저장소에는 포함하지 않음)
+# README 스크린샷은 docs/screenshots/ 에만 두고, 그 밖의 이미지는 올리지 않음
 *.png
+!docs/screenshots/*

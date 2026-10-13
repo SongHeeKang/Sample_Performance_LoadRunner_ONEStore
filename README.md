@@ -39,7 +39,7 @@ Sample_Performance_LoadRunner_ONEStore/
 
 ## LoadRunner 구성도
 
-<img width="1303" height="649" alt="LoadRunner 구성도" src="https://github.com/user-attachments/assets/8ae702e3-7f7d-471f-a172-8e00e57fc19a" />
+<img width="1303" height="649" alt="LoadRunner 구성도" src="docs/screenshots/01-loadrunner-architecture.png" />
 
 LoadRunner의 각 구성 요소가 맡는 역할은 다음과 같습니다.
 
@@ -56,7 +56,7 @@ LoadRunner의 각 구성 요소가 맡는 역할은 다음과 같습니다.
 
 ### 1. 스크립트 작성 (VuGen)
 
-<img width="562" height="368" alt="VuGen Scripts" src="https://github.com/user-attachments/assets/5ad7786e-1a02-4394-bdaf-55fbd49d8f48" />
+<img width="562" height="368" alt="VuGen Scripts" src="docs/screenshots/02-vugen-scripts.png" />
 
 API 하나를 하나의 **트랜잭션**(`lr_start_transaction` ~ `lr_end_transaction`)으로 묶어 응답 시간과 TPS를 API 단위로 측정했습니다.
 
@@ -98,7 +98,7 @@ Action()
 
 ### 2. 부하 제어 및 실시간 모니터링 (Controller)
 
-<img width="773" height="368" alt="Controller 부하제어" src="https://github.com/user-attachments/assets/77ae9d83-74b3-4b8e-bf65-3e23947e0fe0" />
+<img width="773" height="368" alt="Controller 부하제어" src="docs/screenshots/03-controller-load-control.png" />
 
 API별 스크립트를 **Scenario Group**으로 등록하고 그룹마다 Vuser 수를 지정해 부하를 발생시켰습니다.
 테스트 중에는 아래 8개 그래프를 한 화면에 띄워 클라이언트 지표와 서버 리소스를 함께 확인했습니다.
@@ -118,7 +118,7 @@ Vuser가 늘어나는데 TPS가 더 이상 오르지 않고 응답 시간만 늘
 
 ### 3. 결과 분석 (Analysis)
 
-<img width="356" height="184" alt="Analysis 결과" src="https://github.com/user-attachments/assets/424d4959-052b-4ce2-84d4-e55c43ff2653" />
+<img width="356" height="184" alt="Analysis 결과" src="docs/screenshots/04-analysis-result.png" />
 
 테스트가 끝나면 Analysis로 결과 파일을 열어 그래프별로 상세 분석했습니다.
 
@@ -129,7 +129,7 @@ Vuser가 늘어나는 구간(Ramp-up)에서 TPS가 함께 증가하다가, 목�
 
 ### 4. 성능 테스트 결과 Report
 
-<img width="1356" height="792" alt="성능 테스트 Report" src="https://github.com/user-attachments/assets/534a4b2d-ead1-49a4-bb6c-a6010f3503ac" />
+<img width="1356" height="792" alt="성능 테스트 Report" src="docs/screenshots/05-performance-report.png" />
 
 테스트 결과를 평가 의견, 검증 도구, 시스템 구성도, API별 결과 상세 내역과 함께 정리해 유관 부서에 공유했습니다.
 
